@@ -1,0 +1,63 @@
+.container {
+    border-radius: 8px;
+    box-shadow: 0 3px 6px 0 rgba(104, 102, 233, 0.16);
+    background-color: #ffffff;
+    min-width: 800px;
+    padding-bottom: 24px;
+}
+
+h4 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: left;
+  color: #6677e9;
+  padding-left: 24px;
+  padding-top: 24px;
+  margin: 0;
+}
+
+table {
+    width: 100%;
+    border: none;
+}
+
+th {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.19;
+  text-align: left;
+  color: #263238;
+}
+
+td img {
+    width: 36px;
+    height: 36px;
+    border: solid 1px rgba(200, 207, 217, 0.1);
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+td {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    text-align: left;
+    color: #515b5f;
+}
+
+.mat-header-cell, .mat-cell {
+    border: none;
+}
+
+tr .mat-header-cell {
+    height: 48px;
+}
+
+.mat-cell {
+    height: 40px;
+}
+
+mat-icon {
+    fill: rgba(81, 91, 95, 0.7);
+}

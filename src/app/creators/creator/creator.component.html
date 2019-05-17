@@ -1,0 +1,100 @@
+<div class="container-fluid">
+  <div class="container filter">
+    <p>Completed ({{totalCount}})</p>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" >
+    <mat-placeholder class="placeholder">Filter by...</mat-placeholder>
+  </mat-form-field>
+</div>
+
+
+<div class="container">
+    <h4>Content</h4>
+  <table mat-table [dataSource]="myDataArray" matSort class="mat-elevation-z8">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    </ng-container>
+  
+    <!-- Writer Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"><img class="contentImage" [src]="element.contentImage"> {{element.title}}</td>
+    </ng-container>
+
+    <!-- Writer Column -->
+    <ng-container matColumnDef="writer">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header> Writer </th>
+        <td mat-cell *matCellDef="let element"> {{element.writer}}</td>
+      </ng-container>
+
+      <!-- Writer Column -->
+    <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header> Duration </th>
+        <td mat-cell *matCellDef="let element"> {{element.duration}}</td>
+      </ng-container>
+  
+     <!-- Content Type Column -->
+    <ng-container matColumnDef="contentType">
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.contentType}} </td>
+    </ng-container>
+
+      <!-- Category Column -->
+      <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef  mat-sort-header> Category </th>
+          <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+        </ng-container>
+
+     <!-- Word Count Column -->
+     <ng-container matColumnDef="wordCount">
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Word Count </th>
+      <td mat-cell *matCellDef="let element"> {{element.wordCount}} </td>
+    </ng-container>
+
+     <!-- File Column
+     <ng-container matColumnDef="file">
+      <th mat-header-cell *matHeaderCellDef> File </th>
+      <td mat-cell *matCellDef="let element"> {{element.file}} </td>
+    </ng-container> -->
+
+     <!-- Assigned Column -->
+     <ng-container matColumnDef="narrator">
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Narrator </th>
+      <td mat-cell *matCellDef="let element"><img [src]="element.imgUrl"> {{element.narrator}} </td>
+    </ng-container>
+
+     <!-- Role Column
+     <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Role </th>
+      <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+    </ng-container> -->
+
+     <!-- Image Column
+     <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef> Image </th>
+      <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+    </ng-container> -->
+
+     <!-- Tags -->
+     <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element"><a play="filename" class="play" target="_blank" href="/assets/img/bg.png">Play</a> <a download="filename" target="_blank" href="/assets/img/bg.png"> 
+        <!-- <mat-icon class="mat-icon-rtl-mirror" svgIcon="download"></mat-icon> -->
+       Download
+      </a>
+      <mat-icon class="mat-icon-rtl-mirror" class="more" svgIcon="more"></mat-icon>  </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+  
+</div>
+</div>

@@ -1,0 +1,53 @@
+.navbar {
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    background-image: linear-gradient(to bottom, #6aa5e3, #6866e9);
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+.navbar-center {
+    margin: 0 auto;
+}
+
+.nav li a {
+    color: #ffffff;
+}
+
+.nav li button {
+    margin-left: 5em;
+    margin-right: 1em;
+}
+
+.nav li a {
+    margin-right: 1em;
+}
+
+table {
+    width: 100%;
+  }
+
+tr {
+    text-align: center;
+}
+
+li button {
+    margin-top: 7.5px;
+}
+
+.btn {
+    border-radius: 4px;
+  background-image: linear-gradient(to bottom, #feb683, #ff8993);
+  color: #ffffff;
+  border: none;
+}
+
+.nav>li>a:hover {
+    text-decoration: none;
+    background-color: transparent;
+    border-bottom: 4px solid #ff8993;
+    padding-bottom: 11px;
+}
+
+.navbar-brand {
+    color: white;
+}
