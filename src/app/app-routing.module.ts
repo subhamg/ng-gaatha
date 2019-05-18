@@ -13,12 +13,9 @@ import { ProductionsComponent } from './productions/productions.component';
 const routes: Routes = [
   { path: '', component: AdminComponent },
   { path: 'creators', component: CreatorsComponent },
-  { path: 'narrator', component: NarratorComponent },
-  { path: 'production', component: ProductionComponent },
-  { path: 'content', component: CreatorComponent },
   { path: 'narrators', component: NarratorsComponent},
-  { path: 'productions', component: ProductionsComponent}
-  // { path: 'Users', component: UsersComponent }
+  { path: 'productions', component: ProductionsComponent},
+  
 ];
 
 @NgModule({
