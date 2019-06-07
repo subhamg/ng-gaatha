@@ -1,14 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment } from '../environments/environment';
-import { AngularFireAuthModule } from '@angular/fire/auth';
 import { MaterialModule } from './material.module';
-import { CreatorsModule } from './creators/creators.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,7 +18,8 @@ import { ProductionsComponent } from './productions/productions.component';
 import { HeaderComponent } from './header/header.component';
 import { CreateTeamComponent } from './creators/create-team/create-team.component';
 import { CreateContentComponent } from './creators/create-content/create-content.component';
-
+import { ItemsService } from './shared/items.service';
+import { EditItemComponent } from './creators/edit-item/edit-item.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +34,8 @@ import { CreateContentComponent } from './creators/create-content/create-content
     ProductionsComponent,
     HeaderComponent,
     CreateTeamComponent,
-    CreateContentComponent
+    CreateContentComponent,
+    EditItemComponent
   ],
   imports: [
     BrowserModule,
@@ -48,13 +45,9 @@ import { CreateContentComponent } from './creators/create-content/create-content
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    MaterialModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
-    CreatorsModule
+    MaterialModule
   ],
-  providers: [],
+  providers: [ItemsService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

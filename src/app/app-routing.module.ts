@@ -12,14 +12,23 @@ import { ProductionsComponent } from './productions/productions.component';
 
 const routes: Routes = [
   { path: '', component: AdminComponent },
-  { path: 'creators', component: CreatorsComponent },
-  { path: 'narrators', component: NarratorsComponent},
-  { path: 'productions', component: ProductionsComponent},
-  
+  { path: 'creators', redirectTo: '/creators/users', pathMatch: 'full' },
+  {
+    path: 'creators',
+    component: CreatorsComponent,
+    children: [
+      { path: 'users', component: UsersComponent },
+      { path: 'narrator', component: NarratorComponent },
+      { path: 'production', component: ProductionComponent },
+      { path: 'content', component: CreatorComponent }
+    ]
+  },
+  { path: 'narrators', component: NarratorsComponent },
+  { path: 'productions', component: ProductionsComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

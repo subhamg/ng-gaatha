@@ -3,7 +3,7 @@
   <div class="login-box">
     <div class="col-12">
       <form #itemForm="ngForm" (ngSubmit)="onSubmitItem(itemForm)">
-        <input type="hidden" name="_id" />
+        <input type="hidden" name="_id" [(ngModel)]="editItem._id" />
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
@@ -14,7 +14,7 @@
                 id="title"
                 placeholder="Enter Title"
                 name="title"
-                ngModel
+                [(ngModel)]="editItem.title"
               />
             </div>
           </div>
@@ -27,7 +27,7 @@
                 id="writer"
                 placeholder="Enter Writer name"
                 name="writer"
-                ngModel
+                [(ngModel)]="editItem.writer"
               />
             </div>
           </div>
@@ -42,7 +42,7 @@
                 name="category"
                 class="form-control"
                 placeholder="Enter Category"
-                ngModel
+                [(ngModel)]="editItem.category"
               />
             </div>
           </div>
@@ -55,7 +55,7 @@
                 id="contentType"
                 placeholder="Enter Type of Content"
                 name="contentType"
-                ngModel
+                [(ngModel)]="editItem.contentType"
               />
             </div>
           </div>
@@ -70,16 +70,16 @@
                 id="wordCount"
                 placeholder="Enter the word count"
                 name="wordCount"
-                ngModel
+                [(ngModel)]="editItem.wordCount"
               />
             </div>
           </div>
-          <div class="col-lg-6">
+          <!-- <div class="col-lg-6">
             <div class="form-group">
               <label>Upload File</label>
-              <input type="file" class="form-control picture" id="picture" (change)="onFilePicked($event)" />
+              <input type="file" class="form-control picture" id="picture" />
             </div>
-          </div>
+          </div> -->
         </div>
 
         <hr />

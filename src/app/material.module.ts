@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
-import { MatCardModule, 
-    MatProgressSpinnerModule, 
-    MatMenuModule, MatIconModule, 
-    MatToolbarModule, MatButtonModule, 
-    MatFormFieldModule, MatInputModule, 
-    MatSelectModule, MatSortModule, 
-    MatTableModule, MatPaginatorModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatProgressSpinnerModule,
+  MatMenuModule,
+  MatIconModule,
+  MatToolbarModule,
+  MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatSortModule,
+  MatTableModule,
+  MatPaginatorModule
+} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [],
@@ -21,7 +29,9 @@ import { MatCardModule,
     MatSelectModule,
     MatSortModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   exports: [
     MatCardModule,
@@ -35,7 +45,9 @@ import { MatCardModule,
     MatSelectModule,
     MatSortModule,
     MatTableModule,
-    MatPaginatorModule
-  ],
+    MatPaginatorModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ]
 })
-export class MaterialModule { }
+export class MaterialModule {}
