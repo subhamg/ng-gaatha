@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +21,9 @@ import { CreateTeamComponent } from './creators/create-team/create-team.componen
 import { CreateContentComponent } from './creators/create-content/create-content.component';
 import { ItemsService } from './shared/items.service';
 import { EditItemComponent } from './creators/edit-item/edit-item.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,9 @@ import { EditItemComponent } from './creators/edit-item/edit-item.component';
     HeaderComponent,
     CreateTeamComponent,
     CreateContentComponent,
-    EditItemComponent
+    EditItemComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -45,9 +51,13 @@ import { EditItemComponent } from './creators/edit-item/edit-item.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    MaterialModule
+    MaterialModule,
+    NgbModule.forRoot()
   ],
-  providers: [ItemsService],
+  providers: [
+    ItemsService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

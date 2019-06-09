@@ -16,27 +16,27 @@ export class EditItemComponent implements OnInit {
   constructor(private _itemService: ItemsService) {}
 
   ngOnInit() {
-    this.getItems();
+    // this.getItems();
   }
 
-  onSubmitItem(form: NgForm) {
-    console.log(form.value);
-    this._itemService.putItem(form.value).subscribe((res) => {
-      this.resetForm(form);
-      this.success = true;
-      this.getItems();
-    });
-  }
+  // onSubmitItem(form: NgForm) {
+  //   console.log(form.value);
+  //   this._itemService.putItem(form.value).subscribe((res) => {
+  //     this.resetForm(form);
+  //     this.success = true;
+  //     this.getItems();
+  //   });
+  // }
 
-  getItems() {
-    this._itemService.getItems().subscribe((res) => {
-      this._itemService.items = res as Item[];
-    });
-  }
-  resetForm(form?: NgForm) {
-    if (form) {
-      form.reset();
-      this._itemService.selectedItem = new Item();
-    }
-  }
+  // getItems() {
+  //   this._itemService.getItems().subscribe((res) => {
+  //     this._itemService.items = res as Item[];
+  //   });
+  // }
+  // resetForm(form?: NgForm) {
+  //   if (form) {
+  //     form.reset();
+  //     this._itemService.selectedItem = new Item();
+  //   }
+  // }
 }

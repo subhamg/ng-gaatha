@@ -26,22 +26,22 @@
         <li>
           <a routerLink="production" routerLinkActive="active">Production</a>
         </li>
-        <li>
-          <button (click)="onCreateTeam()" class="btn">Create Team</button>
+        <li *ngIf="userIsAuthenticated">
+          <button (click)="onCreateTeam()" class="btn">
+            <a routerLink="/create" routerLinkActive="active">Create</a>
+          </button>
         </li>
-        <li class="dropdown">
-          <a
-            href="#"
-            class="dropdown-toggle"
-            data-toggle="dropdown"
-            role="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            >{{ username }} <span class="caret"></span
-          ></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Logout</a></li>
-          </ul>
+        <li class="dropdown" ngbDropdown>
+          <button
+            class=" btn-outline-primary username"
+            id="dropdownBasic1"
+            ngbDropdownToggle
+          >
+            {{ username }}<span class="caret"></span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem (click)="onLogout()">Logout</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -56,6 +56,12 @@
 
 <!-- <app-creator></app-creator> -->
 <router-outlet *ngIf="!showForm || !showTeamForm"></router-outlet>
-<button (click)="onCreateItem()" mat-fab color="primary" class="custom-fab">
-  <mat-icon class="mat-icon-rtl-mirror" class="add" svgIcon="add"></mat-icon>
+<button
+  *ngIf="userIsAuthenticated"
+  (click)="onCreateItem()"
+  mat-fab
+  color="primary"
+  class="custom-fab"
+>
+  <mat-icon class="mat-icon-rtl-mirror" class="add">add</mat-icon>
 </button>

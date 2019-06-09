@@ -71,9 +71,7 @@ function validateItem(item) {
       .min(3)
       .max(50)
       .required(),
-    wordCount: Joi.string()
-      .min(10)
-      .required()
+    wordCount: Joi.string().required()
   };
 
   return Joi.validate(item, schema);

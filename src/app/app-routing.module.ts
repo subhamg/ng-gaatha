@@ -9,10 +9,14 @@ import { CreatorComponent } from './creators/creator/creator.component';
 import { UsersComponent } from './creators/users/users.component';
 import { NarratorComponent } from './creators/narrator/narrator.component';
 import { ProductionsComponent } from './productions/productions.component';
+import { CreateContentComponent } from './creators/create-content/create-content.component';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: AdminComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'creators', redirectTo: '/creators/users', pathMatch: 'full' },
+  { path: '', component: LoginComponent },
   {
     path: 'creators',
     component: CreatorsComponent,
@@ -20,7 +24,17 @@ const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'narrator', component: NarratorComponent },
       { path: 'production', component: ProductionComponent },
-      { path: 'content', component: CreatorComponent }
+      { path: 'content', component: CreatorComponent },
+      {
+        path: 'create',
+        component: CreateContentComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'edit/:itemId',
+        component: CreateContentComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   },
   { path: 'narrators', component: NarratorsComponent },
@@ -29,6 +43,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule {}

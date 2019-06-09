@@ -1,32 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-creators',
   templateUrl: './creators.component.html',
   styleUrls: ['./creators.component.css']
 })
-export class CreatorsComponent implements OnInit {
+export class CreatorsComponent implements OnInit, OnDestroy {
+  userIsAuthenticated = false;
+  private authListenerSubs: Subscription;
   showForm: Boolean = false;
   showTeamForm: Boolean = false;
   username: string = 'Subham Goyal';
 
-  constructor(matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor(
+    matIconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    private router: Router,
+    private authService: AuthService
+  ) {
     matIconRegistry.addSvgIcon(
       'more',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/more_vert.svg')
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authListenerSubs = this.authService
+      .getAuthStatusListner()
+      .subscribe((isAuthenticated) => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
+  }
+
+  onLogout() {
+    this.authService.logout();
+  }
+
+  ngOnDestroy() {
+    this.authListenerSubs.unsubscribe();
+  }
 
   onCreateItem() {
-    if (this.showForm == true) {
-      this.showForm = false;
-    } else this.showForm = true;
+    this.router.navigate(['creators/create']);
   }
 
   onCreateTeam() {
@@ -34,6 +57,4 @@ export class CreatorsComponent implements OnInit {
       this.showTeamForm = false;
     } else this.showTeamForm = true;
   }
-
-  
 }

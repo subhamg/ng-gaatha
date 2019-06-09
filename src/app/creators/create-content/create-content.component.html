@@ -2,8 +2,8 @@
   <h2 class="item">Create Item</h2>
   <div class="login-box">
     <div class="col-12">
-      <form #itemForm="ngForm" (ngSubmit)="onSubmitItem(itemForm)">
-        <input type="hidden" name="_id" />
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <form [formGroup]="form" (ngSubmit)="onSubmitItem()" *ngIf="!isLoading">
         <div class="row">
           <div class="col-lg-6">
             <div class="form-group">
@@ -11,10 +11,8 @@
               <input
                 type="text"
                 class="form-control"
-                id="title"
                 placeholder="Enter Title"
-                name="title"
-                ngModel
+                formControlName="title"
               />
             </div>
           </div>
@@ -24,10 +22,8 @@
               <input
                 type="text"
                 class="form-control"
-                id="writer"
                 placeholder="Enter Writer name"
-                name="writer"
-                ngModel
+                formControlName="writer"
               />
             </div>
           </div>
@@ -38,11 +34,9 @@
               <label>Category</label>
               <input
                 type="text"
-                id="Category"
-                name="category"
+                formControlName="category"
                 class="form-control"
                 placeholder="Enter Category"
-                ngModel
               />
             </div>
           </div>
@@ -52,10 +46,8 @@
               <input
                 type="text"
                 class="form-control"
-                id="contentType"
                 placeholder="Enter Type of Content"
-                name="contentType"
-                ngModel
+                formControlName="contentType"
               />
             </div>
           </div>
@@ -67,26 +59,36 @@
               <input
                 type="text"
                 class="form-control"
-                id="wordCount"
                 placeholder="Enter the word count"
-                name="wordCount"
-                ngModel
+                formControlName="wordCount"
               />
             </div>
           </div>
           <div class="col-lg-6">
             <div class="form-group">
               <label>Upload File</label>
-              <input type="file" class="form-control picture" id="picture" (change)="onFilePicked($event)" />
+              <button
+                type="button"
+                mat-stroked-button
+                class="form-control"
+                (click)="filePicker.click()"
+              >
+                Upload File
+              </button>
+              <input
+                type="file"
+                #filePicker
+                (change)="onFilePicked($event)"
+              />
             </div>
           </div>
         </div>
 
         <hr />
         <div>
-          <button (click)="resetForm(itemForm)" class="btn btn-default">
+          <!-- <button (click)="resetForm(itemForm)" class="btn btn-default">
             Clear
-          </button>
+          </button> -->
           <button type="submit" class="btn btn-primary">
             Submit
           </button>

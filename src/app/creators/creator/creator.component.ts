@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -7,14 +7,15 @@ import { ItemsService } from 'src/app/shared/items.service';
 import { Item } from 'src/app/shared/item';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-creator',
   templateUrl: './creator.component.html',
   styleUrls: ['./creator.component.css']
 })
-export class CreatorComponent implements OnInit {
-  public ELEMENT_DATA = [];
+export class CreatorComponent implements OnInit, OnDestroy {
   public errorMsg;
   currentItem: Item;
   hideData: boolean = false;
@@ -30,9 +31,12 @@ export class CreatorComponent implements OnInit {
     'itemDocFile',
     'actions'
   ];
+  userIsAuthenticated = false;
+  private itemsSub: Subscription;
+  private authStatusSub: Subscription;
 
-  myDataArray = new MatTableDataSource(this.ELEMENT_DATA);
-  totalCount = this.dataSource.length;
+  myDataArray = new MatTableDataSource(this.dataSource);
+  totalCount: Number;
   public success: boolean = false;
 
   applyFilter(filterValue: string) {
@@ -47,7 +51,8 @@ export class CreatorComponent implements OnInit {
     private router: Router,
     private _itemsService: ItemsService,
     matIconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer
+    sanitizer: DomSanitizer,
+    private authService: AuthService
   ) {
     matIconRegistry.addSvgIcon(
       'download',
@@ -63,10 +68,17 @@ export class CreatorComponent implements OnInit {
   ngOnInit() {
     this._itemsService.getItems().subscribe((data) => {
       this.dataSource = data;
-      console.log(data);
+      this.totalCount = data.length;
+      console.log(data.length);
     });
     this.myDataArray.sort = this.sort;
     this.myDataArray.paginator = this.paginator;
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatusSub = this.authService
+      .getAuthStatusListner()
+      .subscribe((isAuthenticated) => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
   }
 
   editItem(_id: number) {
@@ -78,41 +90,23 @@ export class CreatorComponent implements OnInit {
     console.log(this.currentItem);
   }
 
-  onSubmitItem(form: NgForm) {
-    if (form.value._id) {
-      this._itemsService.putItem(form.value).subscribe((res) => {
-        this.resetForm(form);
-        this.success = true;
-        this.getItems();
-      });
-    } else {
-      this._itemsService.postItem(form.value).subscribe((res) => {
-        this.resetForm(form);
-        this.success = true;
-        this.getItems();
-      });
-    }
-  }
-
-  resetForm(form?: NgForm) {
-    if (form) {
-      form.reset();
-      this._itemsService.selectedItem = new Item();
-    }
-  }
-
   getItems() {
     this._itemsService.getItems().subscribe((res) => {
-      this.ELEMENT_DATA = res;
+      this.dataSource = res;
       console.log(res);
     });
   }
 
-  deleteItem(id: string) {
+  onDelete(id: string) {
     console.log(id);
     this._itemsService.deleteItem(id).subscribe((res) => {
       this.getItems();
     });
+
     this.router.navigate(['creators/content']);
+  }
+
+  ngOnDestroy() {
+    this.authStatusSub.unsubscribe();
   }
 }
