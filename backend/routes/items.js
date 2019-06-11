@@ -9,7 +9,11 @@ const router = express.Router();
 const MIME_TYPE_MAP = {
   'image/png': 'png',
   'image/jpeg': 'jpg',
-  'image/jpg': 'jpg'
+  'image/jpg': 'jpg',
+  'application/msword': 'doc',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    'docx',
+  'application/pdf': 'pdf'
 };
 
 const storage = multer.diskStorage({
@@ -19,7 +23,7 @@ const storage = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    cb(null, './uploads/creatorfile/');
+    cb(error, 'backend/docFile');
   },
   filename: function(req, file, cb) {
     const name = file.originalname
@@ -33,78 +37,86 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/', async (req, res) => {
-  const items = await Item.find().sort('title');
-  res.send(items);
+router.get('/', (req, res) => {
+  Item.find()
+    .sort('creator')
+    .then((documents) => {
+      res.status(200).json({
+        message: 'Item fetched successfully',
+        items: documents
+      });
+    });
 });
 
-router.post('/', checkAuth, upload.single('docFile'), async (req, res) => {
-  const { error } = validateItem(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.post('/', checkAuth, upload.single('docFile'), (req, res) => {
   const url = req.protocol + '://' + req.get('host');
   // const path = req.file.path.replace('\\', '/');
-  let item = new Item({
+  const item = new Item({
     title: req.body.title,
     writer: req.body.writer,
     category: req.body.category,
     contentType: req.body.contentType,
     wordCount: req.body.wordCount,
-    // docPath: url + '/files/' + req.file.filename
-    docPath: url + '/files/' + req.file.filename
+    docPath: url + '/files/' + req.file.filename,
+    creator: req.userData.userId
 
     // docPath: url + '/' + path
   });
-  item = await item.save();
-
-  res.json(item);
+  item.save().then((createdItem) => {
+    res.status(201).json({
+      message: 'Item added successfully',
+      item: {
+        ...createdItem,
+        id: createdItem._id
+      }
+    });
+  });
 });
 
-router.put('/:id', checkAuth, upload.single('docFile'), async (req, res) => {
-  const { error } = validateItem(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.put('/:id', checkAuth, upload.single('docFile'), (req, res) => {
   let docPath = req.body.docPath;
   if (req.file) {
     const url = req.protocol + '://' + req.get('host');
     // const path = req.file.path.replace('\\', '/');
     docPath = url + '/files/' + req.file.filename;
   }
-  const item = await Item.findByIdAndUpdate(
-    req.params.id,
-    {
-      title: req.body.title,
-      writer: req.body.writer,
-      category: req.body.category,
-      contentType: req.body.contentType,
-      wordCount: req.body.wordCount,
-      docPath: docPath
-    },
-    {
-      new: true
+  const item = new Item({
+    _id: req.body.id,
+    title: req.body.title,
+    writer: req.body.writer,
+    category: req.body.category,
+    contentType: req.body.contentType,
+    wordCount: req.body.wordCount,
+    docPath: docPath,
+    creator: req.userData.userId
+  });
+
+  // if (!item)
+  //   return res.status(404).send('The item with the given ID was not found.');
+
+  Item.updateOne({ _id: req.params.id }, item).then((result) => {
+    res.status(200).json({ message: 'Update successfull' });
+    res.send(result);
+  });
+});
+
+router.delete('/:id', checkAuth, (req, res) => {
+  Item.deleteOne({ _id: req.params.id }).then((result) => {
+    console.log(result);
+    res.status(200).json({
+      message: 'Item deleted'
+    });
+  });
+});
+
+router.get('/:id', (req, res) => {
+  Item.findById(req.params.id).then((item) => {
+    if (item) {
+      res.status(200).json(item);
+    } else {
+      res.status(404).json({ message: 'Item not found!' });
     }
-  );
-
-  if (!item)
-    return res.status(404).send('The item with the given ID was not found.');
-
-  res.send(item);
-});
-
-router.delete('/:id', checkAuth, async (req, res) => {
-  const item = await Item.findByIdAndRemove(req.params.id);
-
-  if (!item)
-    return res.status(404).send('The item with the given ID was not found.');
-
-  res.send(item);
-});
-
-router.get('/:id', async (req, res) => {
-  const item = await Item.findById(req.params.id);
-
-  if (!item)
-    return res.status(404).send('The item with the given ID was not found.');
-
-  res.send(item);
+  });
 });
 
 module.exports = router;

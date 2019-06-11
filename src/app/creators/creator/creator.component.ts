@@ -19,7 +19,8 @@ export class CreatorComponent implements OnInit, OnDestroy {
   public errorMsg;
   currentItem: Item;
   hideData: boolean = false;
-  dataSource: Item[] = [];
+  dataSource: Item[];
+  isLoading = false;
   // displayedColumns: string[] = ['position', 'title', 'writer', 'duration', 'contentType', 'category', 'wordCount', 'narrator', 'actions'];
   displayedColumns: string[] = [
     'position',
@@ -32,6 +33,7 @@ export class CreatorComponent implements OnInit, OnDestroy {
     'actions'
   ];
   userIsAuthenticated = false;
+  userId: string;
   private itemsSub: Subscription;
   private authStatusSub: Subscription;
 
@@ -66,44 +68,35 @@ export class CreatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._itemsService.getItems().subscribe((data) => {
-      this.dataSource = data;
-      this.totalCount = data.length;
-      console.log(data.length);
-    });
+    this._itemsService.getItems();
+    this.itemsSub = this._itemsService
+      .getItemUpdateListener()
+      .subscribe((data: Item[]) => {
+        this.userId = this.authService.getUserId();
+        this.dataSource = data.filter((x) => x.creator == this.userId);
+        this.totalCount = this.dataSource.length;
+        this.router.navigate(['creators/content']);
+        // this.isLoading = true;
+      });
+    this.isLoading = true;
     this.myDataArray.sort = this.sort;
     this.myDataArray.paginator = this.paginator;
+    this.userId = this.authService.getUserId();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authStatusSub = this.authService
       .getAuthStatusListner()
       .subscribe((isAuthenticated) => {
         this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
       });
-  }
-
-  editItem(_id: number) {
-    if (this.hideData == true) {
-      this.hideData = false;
-    } else this.hideData = true;
-    this.currentItem = this.dataSource[_id];
-    console.log(_id);
-    console.log(this.currentItem);
-  }
-
-  getItems() {
-    this._itemsService.getItems().subscribe((res) => {
-      this.dataSource = res;
-      console.log(res);
-    });
+    this.isLoading = false;
   }
 
   onDelete(id: string) {
-    console.log(id);
-    this._itemsService.deleteItem(id).subscribe((res) => {
-      this.getItems();
+    // this.isLoading = true;
+    this._itemsService.deleteItem(id).subscribe(() => {
+      this._itemsService.getItems();
     });
-
-    this.router.navigate(['creators/content']);
   }
 
   ngOnDestroy() {

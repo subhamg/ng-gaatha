@@ -1,4 +1,5 @@
 // const config = require('config');
+const path = require('path');
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
@@ -9,6 +10,7 @@ const items = require('./routes/items');
 const users = require('./routes/users');
 // const auth = require('./routes/auth');
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
@@ -18,14 +20,14 @@ const app = express();
 // }
 
 mongoose
-  .connect(
-    'mongodb://localhost/gaatha',
-    { useNewUrlParser: true }
-  )
+  .connect('mongodb://localhost/gaatha', { useNewUrlParser: true })
   .then(() => console.log('Connected to MongoDB...'))
   .catch((err) => console.error('Could not connect to MongoDB...'));
 
-app.use('/uploads/creatorfile', express.static('uploads/creatorfile'));
+// app.use('/uploads/creatorfile', express.static('uploads/creatorfile'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/files', express.static(path.join('backend/docFile')));
 app.use(cors());
 app.use(express.json());
 app.use('/api/items', items);

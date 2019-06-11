@@ -11,6 +11,8 @@ export class SignupComponent implements OnInit {
   hideLogin: Boolean = true;
   isLoading = false;
 
+  roles = ['Creator', 'Narrator', 'Production'];
+
   constructor(public authService: AuthService) {}
 
   ngOnInit() {}
@@ -23,6 +25,12 @@ export class SignupComponent implements OnInit {
 
   onSignUp(form: NgForm) {
     this.isLoading = true;
-    this.authService.createUser(form.value.email, form.value.password);
+    this.authService.createUser(
+      form.value.username,
+      form.value.email,
+      form.value.role,
+      form.value.password
+    );
+    console.log(form.value);
   }
 }

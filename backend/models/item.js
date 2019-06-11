@@ -42,7 +42,8 @@ const itemSchema = new mongoose.Schema({
   docPath: {
     type: String,
     required: true
-  }
+  },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 // itemSchema.virtual('coverImagePath').get(function () {

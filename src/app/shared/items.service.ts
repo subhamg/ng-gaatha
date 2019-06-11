@@ -23,26 +23,28 @@ export class ItemsService {
   // }
 
   getItems() {
-    return this.http.get<Item[]>(this._url);
-    // .pipe(
-    //   map((itemData) => {
-    //     return itemData.items.map((item) => {
-    //       return {
-    //         _id: item._id,
-    //         title: item.title,
-    //         writer: item.writer,
-    //         category: item.category,
-    //         contentType: item.contentType,
-    //         wordCount: item.wordCount,
-    //         docPath: item.docPath
-    //       };
-    //     });
-    //   })
-    // )
-    // .subscribe((transformedItems) => {
-    //   this.items = transformedItems;
-    //   this.itemsUpdated.next([...this.items]);
-    // });
+    this.http
+      .get<{ message: string; items: any }>(this._url)
+      .pipe(
+        map((itemData) => {
+          return itemData.items.map((item) => {
+            return {
+              _id: item._id,
+              title: item.title,
+              writer: item.writer,
+              category: item.category,
+              contentType: item.contentType,
+              wordCount: item.wordCount,
+              docPath: item.docPath,
+              creator: item.creator
+            };
+          });
+        })
+      )
+      .subscribe((transformedItems) => {
+        this.items = transformedItems;
+        this.itemsUpdated.next([...this.items]);
+      });
   }
 
   getItemUpdateListener() {
@@ -58,6 +60,7 @@ export class ItemsService {
       contentType: string;
       wordCount: string;
       docPath: string;
+      creator: string;
     }>(this._url + '/' + _id);
   }
 
@@ -79,17 +82,6 @@ export class ItemsService {
     this.http
       .post<{ message: string; item: Item }>(this._url, postItem)
       .subscribe((resData) => {
-        // const item: Item = {
-        //   // _id: resData.item._id,
-        //   // title: title,
-        //   // writer: writer,
-        //   // category: category,
-        //   // contentType: contentType,
-        //   // wordCount: wordCount,
-        //   // docPath: resData.item.docPath
-        // };
-        // this.items.push(item);
-        this.itemsUpdated.next([...this.items]);
         this.router.navigate(['/creators/content']);
       });
   }
@@ -114,7 +106,7 @@ export class ItemsService {
   // }
 
   putItem(
-    _id: string,
+    id: string,
     title: string,
     writer: string,
     category: string,
@@ -125,6 +117,7 @@ export class ItemsService {
     let itemData: Item | FormData;
     if (typeof docFile === 'object') {
       itemData = new FormData();
+      itemData.append('id', id);
       itemData.append('title', title);
       itemData.append('writer', writer);
       itemData.append('category', category);
@@ -133,40 +126,25 @@ export class ItemsService {
       itemData.append('docFile', docFile, title);
     } else {
       itemData = {
-        _id: _id,
+        id: id,
         title: title,
         writer: writer,
         category: category,
         contentType: contentType,
         wordCount: wordCount,
-        docPath: docFile
+        docPath: docFile,
+        creator: null
       };
-      delete itemData._id;
-      // delete itemData.docPath;
+      // delete itemData._id;
+      // // delete itemData.docPath;
     }
 
-    this.http.put(this._url + '/' + _id, itemData).subscribe((response) => {
-      const updatedItems = [...this.items];
-      const oldPostIndex = updatedItems.findIndex((p) => p._id === _id);
-      const item: Item = {
-        _id: _id,
-        title: title,
-        writer: writer,
-        category: category,
-        contentType: contentType,
-        wordCount: wordCount,
-        docPath: ''
-      };
-      // // delete item._id;
-      // delete item.docPath;
-      updatedItems[oldPostIndex] = item;
-      this.items = updatedItems;
-      this.itemsUpdated.next([...this.items]);
+    this.http.put(this._url + '/' + id, itemData).subscribe((response) => {
       this.router.navigate(['/creators/content']);
     });
   }
 
   deleteItem(_id: string) {
-    return this.http.delete<Item[]>(this._url + '/' + _id);
+    return this.http.delete(this._url + '/' + _id);
   }
 }

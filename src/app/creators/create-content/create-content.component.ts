@@ -51,13 +51,14 @@ export class CreateContentComponent implements OnInit {
         this._itemService.getItem(this.itemId).subscribe((itemData) => {
           this.isLoading = false;
           this.item = {
-            _id: itemData._id,
+            id: itemData._id,
             title: itemData.title,
             writer: itemData.writer,
             category: itemData.category,
             contentType: itemData.contentType,
             wordCount: itemData.wordCount,
-            docPath: itemData.docPath
+            docPath: itemData.docPath,
+            creator: itemData.creator
           };
           // this.item = itemData;
           this.form.patchValue({

@@ -12,9 +12,12 @@ router.post('/signup', (req, res) => {
 
   bcrypt.hash(req.body.password, 10).then((hash) => {
     const user = new User({
+      username: req.body.username,
       email: req.body.email,
+      role: req.body.role,
       password: hash
     });
+    console.log(user);
     user
       .save()
       .then((result) => {
@@ -50,13 +53,20 @@ router.post('/login', (req, res, next) => {
         });
       }
       const token = jwt.sign(
-        { email: fetchedUser.email, userId: fetchedUser._id },
+        {
+          email: fetchedUser.email,
+          userId: fetchedUser._id,
+          role: fetchedUser.role
+        },
         'My_Very_Educated_Mother_Just_Served_Us_Noodles',
         { expiresIn: '1h' }
       );
       res.status(200).json({
         token: token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userId: fetchedUser._id,
+        username: fetchedUser.username,
+        role: fetchedUser.role
       });
     })
     .catch((err) => {
@@ -64,6 +74,12 @@ router.post('/login', (req, res, next) => {
         message: 'Auth failed'
       });
     });
+});
+
+router.get('/', (req, res) => {
+  User.find().then((documents) => {
+    res.status(200).json(documents);
+  });
 });
 
 module.exports = router;

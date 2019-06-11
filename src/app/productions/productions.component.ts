@@ -3,6 +3,7 @@ import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { DataSource } from '@angular/cdk/table';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import { AuthService } from '../auth/auth.service';
 
 export interface PeriodicElement {
   position: number;
@@ -42,7 +43,7 @@ export class ProductionsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor(matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer, private authService: AuthService) {
     matIconRegistry.addSvgIcon(
       'download', sanitizer.bypassSecurityTrustResourceUrl('assets/img/download.svg')
     );
@@ -63,6 +64,7 @@ export class ProductionsComponent implements OnInit {
   ngOnInit() {
     this.myDataArray.sort = this.sort;
     this.myDataArray.paginator = this.paginator;
+    
   }
 
 }

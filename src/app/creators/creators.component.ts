@@ -17,7 +17,7 @@ export class CreatorsComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
   showForm: Boolean = false;
   showTeamForm: Boolean = false;
-  username: string = 'Subham Goyal';
+  private username: any;
 
   constructor(
     matIconRegistry: MatIconRegistry,
@@ -32,12 +32,15 @@ export class CreatorsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.username = this.authService.getUserName();
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSubs = this.authService
       .getAuthStatusListner()
       .subscribe((isAuthenticated) => {
         this.userIsAuthenticated = isAuthenticated;
       });
+
+    console.log(this.username);
   }
 
   onLogout() {

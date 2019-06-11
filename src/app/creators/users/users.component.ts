@@ -1,25 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
-import {MatIconRegistry} from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
-
-export interface Users {
-  imgUrl: string;
-  name: string;
-  email: string;
-  type: string;
-  status: string;
-}
-
-const ELEMENT_DATA: Users[] = [
-  {imgUrl: 'assets/img/got/avartar1.jpg', name: 'Mike Bhand', email: 'mikebhand@email.com', type: 'Creator', status: 'Pending'},
-  {imgUrl: 'assets/img/got/avartar2.jpg', name: 'Jon Snow', email: 'jonsnow@email.com', type: 'Creator', status: 'Approved'},
-  {imgUrl: 'assets/img/got/avartar3.jpg ', name: 'Daenerys Targaryen', email: 'danny@email.com', type: 'Narrator', status: 'Approved'},
-  {imgUrl: 'assets/img/got/avartar4.jpg', name: 'Bran Strak', email: 'branstark@email.com', type: 'Production', status: 'Approved'},
-  {imgUrl: 'assets/img/got/avartar5.jpg', name: 'Cersie Lannister', email: 'cersie@email.com', type: 'Narrator', status: 'Reject'},
-  {imgUrl: 'assets/img/got/avartar6.jpg', name: 'Grey Worm', email: 'greyworm@email.com', type: 'Creator', status: 'Approved'},
-];
-
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from 'src/app/auth/auth.service';
+import { AuthData } from 'src/app/auth/auth-data.model';
 
 @Component({
   selector: 'app-users',
@@ -27,20 +11,28 @@ const ELEMENT_DATA: Users[] = [
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
+  dataSource: AuthData[] = [];
 
-  displayedColumns: string[] = [ 'name', 'email', 'type', 'status', 'actions'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  displayedColumns: string[] = ['name', 'email', 'type', 'status', 'actions'];
+  userData = new MatTableDataSource(this.dataSource);
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  constructor(
+    matIconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    private authService: AuthService
+  ) {
     matIconRegistry.addSvgIcon(
-      'more', sanitizer.bypassSecurityTrustResourceUrl('assets/img/more_vert.svg')
+      'more',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/more_vert.svg')
     );
-   }
-
-  ngOnInit() {
-    this.dataSource.sort = this.sort;
   }
 
+  ngOnInit() {
+    this.userData.sort = this.sort;
+    this.authService.getUsers().subscribe((data) => {
+      this.dataSource = data;
+    });
+  }
 }

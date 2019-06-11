@@ -1,4 +1,5 @@
 <div class="container-fluid" *ngIf="!hideData">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
   <div class="container filter">
     <p>Completed ({{ totalCount }})</p>
     <mat-form-field>
